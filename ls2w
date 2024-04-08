@@ -1,0 +1,61 @@
+internal class Program
+{
+
+
+    
+        int[,] l = new int[,]
+        {
+    {1, 1, 1, 1, 1, 1, 1 },
+    {1, 0, 0, 0, 0, 0, 1 },
+    {1, 0, 1, 1, 1, 0, 1 },
+    {0, 0, 0, 0, 1, 0, 0 },
+    {1, 1, 0, 0, 1, 1, 1 },
+    {1, 1, 1, 0, 1, 1, 1 },
+    {1, 1, 1, 0, 1, 1, 1 }
+        };
+   
+
+    
+
+    public bool HasExit(int startI, int startJ)
+    {
+        if (l[startJ, startI] == 1)
+        {
+            Console.WriteLine("ТОЧКА В СТЕНЕ");
+            return false;
+        }
+        else if (l[startJ, startI] == 2)
+        {
+            Console.WriteLine("выход найден");
+            return true;
+        }
+
+        
+
+        var stack = new Stack<Tuple<int, int>>();
+        stack.Push(new(startI, startJ));
+
+        while (stack.Count > 0)
+        {
+            var temp = stack.Pop();
+
+            if (l[temp.Item1, temp.Item2] == 2)
+            {
+                Console.WriteLine("выход найден");
+                return true;
+            }
+            l[temp.Item1, temp.Item2] = 1;
+
+            if (temp.Item2 >= 0 && l[temp.Item1, temp.Item2 - 1] != 1) stack.Push(new(temp.Item1, temp.Item2 - 1));
+            if (temp.Item2 + 1 < l.GetLength(1) && l[temp.Item1, temp.Item2 + 1] != 1) stack.Push(new(temp.Item1, temp.Item2 + 1));
+            if (temp.Item1 - 1 >= 0 && l[temp.Item1 -1, temp.Item2] != 1) stack.Push(new(temp.Item1 - 1, temp.Item2));
+            if (temp.Item1 + 1 < l.GetLength(0) && l[temp.Item1 + 1, temp.Item2] != 1) stack.Push(new(temp.Item1 + 1, temp.Item2));
+
+        }
+        return false;
+    }
+    static void Main(string[] args)
+    {
+        Console.WriteLine(new Program().HasExit(1,3));
+    }
+}
